@@ -10,10 +10,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
         working-directory: apps/opinion-ate
-        # with:
-        #   # just perform install
-        #   runTests: false
-      # - run: yarn lint
       - name: Unit Tests
         run: yarn test --watchAll=false
         working-directory: apps/opinion-ate
