@@ -1,32 +1,27 @@
 name: Test
 on: [push]
-
+# [reference: cypress-gh-action-monorepo](https://github.com/bahmutov/cypress-gh-action-monorepo)
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    # # Docker image with Cypress pre-installed
-    # # https://github.com/cypress-io/cypress-docker-images/tree/master/included
-    # container: cypress/included:3.8.3
     steps:
       - uses: actions/checkout@v3
       - name: Install Dependencies
-        run: cd ./apps/opinion-ate/ && yarn install --frozen-lockfile
-      # - name: Set up pnpm
-      #   uses: pnpm/action-setup@v2.0.1
-      #   with:
-      #     version: 6
-      #     # Only install what we need to run the client in-action and tests against it
-      #     # format:    `--filter <packagename>...`
-      #     run_install: |
-      #       - args: [--filter apps/opinion-ate... --filter cypress-tests...]
+        working-directory: apps/opinion-ate
+        run: yarn install --frozen-lockfile
+        with:
+          # just perform install
+          runTests: false
+      - run: yarn lint
       - name: Unit Tests
-        run: cd ./apps/opinion-ate/ && yarn test --watchAll=false
+        working-directory: apps/opinion-ate
+        run: yarn test --watchAll=false
       - name: E2E Tests
         uses: cypress-io/github-action@v3.0.3
         with:
           # we have already installed all dependencies above
           install: false
-          # command: pnpm --dir cypress/ cypress:ci
-          start: cd ./apps/opinion-ate/ && yarn start
+          working-directory: apps/opinion-ate
+          start: yarn start
           wait-on: 'http://localhost:3000'
