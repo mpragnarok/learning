@@ -13,7 +13,7 @@ jobs:
         # with:
         #   # just perform install
         #   runTests: false
-      - run: yarn lint
+      # - run: yarn lint
       - name: Unit Tests
         run: yarn test --watchAll=false
         working-directory: apps/opinion-ate
