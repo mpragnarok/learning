@@ -8,15 +8,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install Dependencies
-        working-directory: apps/opinion-ate
         run: yarn install --frozen-lockfile
-        with:
-          # just perform install
-          runTests: false
+        working-directory: apps/opinion-ate
+        # with:
+        #   # just perform install
+        #   runTests: false
       - run: yarn lint
       - name: Unit Tests
-        working-directory: apps/opinion-ate
         run: yarn test --watchAll=false
+        working-directory: apps/opinion-ate
       - name: E2E Tests
         uses: cypress-io/github-action@v3.0.3
         with:
