@@ -1,6 +1,13 @@
-# Getting Started with Create React App
+# opinion-ate-fe-testing
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![Netlify Status](https://api.netlify.com/api/v1/badges/61a0132b-24d4-4583-b677-ef344432cbf1/deploy-status)](https://app.netlify.com/sites/fe-react-testing-demo/deploys)
+
+An app for tracking reviews of dishes at different restaurants with front-end testing enabled.
+
+Production: <https://fe-react-testing-demo.netlify.app/>
+
+Dependencies are locked with a `yarn.lock` file, so please use `yarn` instead
+of `npm` to install them.
 
 ## Available Scripts
 
