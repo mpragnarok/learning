@@ -27,6 +27,6 @@ jobs:
         with:
           # we have already installed all dependencies above
           install: false
-          command: pnpm --dir cypress/ cypress:ci
+          # command: pnpm --dir cypress/ cypress:ci
           start: cd ./apps/opinion-ate/ && yarn start
           wait-on: 'http://localhost:3000'
