@@ -1,0 +1,23 @@
+name: Test
+on: [push]
+# [reference: cypress-gh-action-monorepo](https://github.com/bahmutov/cypress-gh-action-monorepo)
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: apps/opinion-ate
+      - name: Unit Tests
+        run: yarn test --watchAll=false
+        working-directory: apps/opinion-ate
+      - name: E2E Tests
+        uses: cypress-io/github-action@v3.0.3
+        with:
+          # we have already installed all dependencies above
+          install: false
+          working-directory: apps/opinion-ate
+          start: yarn start
+          wait-on: 'http://localhost:3000'
