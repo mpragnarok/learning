@@ -4,15 +4,29 @@ on: [push]
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    # # Docker image with Cypress pre-installed
+    # # https://github.com/cypress-io/cypress-docker-images/tree/master/included
+    # container: cypress/included:3.8.3
     steps:
       - uses: actions/checkout@v3
-      - name: Install Dependencies
-        run: cd ./apps/opinion-ate/ && yarn install --frozen-lockfile
+      # - name: Install Dependencies
+      #   run: cd ./apps/opinion-ate/ && yarn install --frozen-lockfile
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6
+          # Only install what we need to run the client in-action and tests against it
+          # format:    `--filter <packagename>...`
+          run_install: |
+            - args: [--filter apps/opinion-ate... --filter cypress-tests...]
       - name: Unit Tests
         run: cd ./apps/opinion-ate/ && yarn test --watchAll=false
       - name: E2E Tests
         uses: cypress-io/github-action@v3.0.3
         with:
+          # we have already installed all dependencies above
+          install: false
+          command: pnpm --dir cypress/ cypress:ci
           start: cd ./apps/opinion-ate/ && yarn start
           wait-on: 'http://localhost:3000'
