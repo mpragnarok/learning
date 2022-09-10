@@ -4,8 +4,8 @@ describe('Listing Restaurants', () => {
     const pizzaPlace = 'Pizza Place';
     // stub api request
     cy.intercept('GET', 'https://api.outsidein.dev/*/restaurants', [
-      {id: 1, name: 'Sushi Place'},
-      {id: 2, name: 'pizzaPlace'},
+      {id: 1, name: sushiPlace},
+      {id: 2, name: pizzaPlace},
     ]);
     cy.visit('/');
     cy.contains(sushiPlace);
