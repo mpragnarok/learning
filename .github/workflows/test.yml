@@ -21,3 +21,7 @@ jobs:
           working-directory: apps/opinion-ate
           start: yarn start
           wait-on: 'http://localhost:3000'
+          env: true
+        env:
+          REACT_APP_BASE_URL: ${{secrets.REACT_APP_BASE_URL}}
+          REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
