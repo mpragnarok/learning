@@ -1,4 +1,4 @@
-import {act, render, screen} from '@testing-library/react';
+import {act, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import flushPromises from 'flush-promises';
 import api from '../api';
@@ -24,35 +24,20 @@ describe('NewRestaurantForm', () => {
       expect(screen.queryByText(serverError)).not.toBeInTheDocument();
     });
   });
-  describe('when filled in', () => {
-    async function fillInForm() {
-      renderComponent();
-      createRestaurant.mockResolvedValue();
-      await userEvent.type(
-        screen.getByPlaceholderText('Add Restaurant'),
-        restaurantName,
-      );
-      userEvent.click(screen.getByText('Add'));
-      // return act, so Jest will wait on promise before running individual tests
-      return act(flushPromises);
-    }
-    it('calls createRestaurant with the name', async () => {
-      await fillInForm();
-      expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
-    });
-
-    it('clears the name', async () => {
-      await fillInForm();
-      expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual('');
-    });
-    it('does not display a validation error', async () => {
-      await fillInForm();
-      expect(screen.queryByText(requiredError)).not.toBeInTheDocument();
-    });
-    it('does not display a server error', () => {
-      renderComponent();
-      expect(screen.queryByText(serverError)).not.toBeInTheDocument();
-    });
+  it('allows submitting the form', async () => {
+    renderComponent();
+    createRestaurant.mockResolvedValue();
+    await userEvent.type(
+      screen.getByPlaceholderText('Add Restaurant'),
+      restaurantName,
+    );
+    userEvent.click(screen.getByText('Add'));
+    await waitFor(() =>
+      expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual(''),
+    );
+    expect(screen.queryByText(requiredError)).not.toBeInTheDocument();
+    expect(screen.queryByText(serverError)).not.toBeInTheDocument();
+    expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
   });
 
   describe('when empty', () => {
@@ -90,29 +75,21 @@ describe('NewRestaurantForm', () => {
     });
   });
 
-  describe('when the store action rejects', () => {
-    async function fillInForm() {
-      renderComponent();
-      createRestaurant.mockRejectedValue();
+  it('displays an error when the store action rejects', async () => {
+    renderComponent();
+    createRestaurant.mockRejectedValue();
 
-      await userEvent.type(
-        screen.getByPlaceholderText('Add Restaurant'),
-        restaurantName,
-      );
-      userEvent.click(screen.getByText('Add'));
-      return act(flushPromises);
-    }
-    it('displays a server error', async () => {
-      await fillInForm();
-      expect(screen.getByText(serverError)).toBeInTheDocument();
-    });
-    it('does not clear the name', async () => {
-      await fillInForm();
-      expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual(
-        restaurantName,
-      );
-    });
+    await userEvent.type(
+      screen.getByPlaceholderText('Add Restaurant'),
+      restaurantName,
+    );
+    userEvent.click(screen.getByText('Add'));
+    await screen.findByText(serverError);
+    expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual(
+      restaurantName,
+    );
   });
+
   describe('when retrying after a server error', () => {
     async function retrySubmittingForm() {
       renderComponent();
