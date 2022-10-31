@@ -54,7 +54,7 @@ clean-and-grep-public: clean-pages grep-public-markdown
 # [the solution of `sed` recursively in OSX version](https://www.cyberciti.biz/faq/unix-linux-replace-string-words-in-many-files/#comment-68305)
 # Wrap the content with Custome tags: `- #+BEGIN_PRIVATE/` and `- #+END_PRIVATE`
 find-and-remove-private-content:
-	LC_ALL=C find ${TARGET_VAULT}/pages -type f | xargs -I@ sed -i '' '/^- #+BEGIN_PRIVATE/,/^- #+END_PRIVATE/d' @
+	LC_ALL=C find ${TARGET_VAULT}/pages -type f | xargs -I@ sed -i '' '/^[ \t]*- #+BEGIN_PRIVATE/,/^[ \t]*- #+END_PRIVATE/d' @
 
 get-shells:
 	curl https://raw.githubusercontent.com/mpragnarok/learning/main/common/shells/logseq-publish.sh -o logseq-publish.sh
